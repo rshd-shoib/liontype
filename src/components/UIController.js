@@ -29,7 +29,7 @@ export class UIController {
     this.tests = 0;
     this.theme = 'neon';
 
-    this.wordsEl.appendChild(this.caretEl); // caret scrolls with the word stream
+    this.wordsEl.appendChild(this.caretEl); 
 
     this._bindEngine();
     this._bindConfigBar();
@@ -119,7 +119,6 @@ export class UIController {
   }
 
   _bindInput() {
-    // a hidden input keeps mobile keyboards working; all logic runs off keydown
     document.addEventListener('keydown', ev => {
       if (ev.key === 'Tab' || ev.key === 'Escape') {
         ev.preventDefault();
@@ -162,7 +161,11 @@ export class UIController {
     this.resultsEl.classList.remove('show');
     this.arenaEl.classList.remove('typing');
     this.lineOffset = 0;
-    this.wordsEl.style.transform = 'translateY(0)';
+    
+    // Safely reset GSAP cached transform state
+    gsap.killTweensOf(this.wordsEl);
+    gsap.set(this.wordsEl, { y: 0 });
+
     this.engine.reset();
     this.focus();
     gsap.fromTo(this.arenaEl, { opacity: 0.35, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
@@ -170,7 +173,7 @@ export class UIController {
 
   flashError() {
     this.arenaEl.classList.remove('shake');
-    void this.arenaEl.offsetWidth; // restart the animation
+    void this.arenaEl.offsetWidth; 
     this.arenaEl.classList.add('shake');
   }
 
@@ -178,11 +181,11 @@ export class UIController {
 
   renderWords() {
     const { words, typed, wordIndex } = this.engine;
-    const limit = this.engine.config.mode === 'words'
-      ? words.length
-      : Math.min(words.length, wordIndex + 60);
+    
+    // Render all words in the current batch to prevent destroying the DOM on every spacebar press
+    const limit = words.length;
 
-    // rebuild the DOM only when the word list itself changed
+    // Rebuild the DOM only when the entire word list changes (e.g. test restart or time mode pagination)
     if (this.wordEls.length !== limit) {
       const frag = document.createDocumentFragment();
       this.wordEls = [];
@@ -197,7 +200,6 @@ export class UIController {
       this.wordsEl.appendChild(this.caretEl);
       for (let i = 0; i < limit; i++) this.paintWord(i);
     } else {
-      // only the neighbourhood of the caret can have changed
       for (let i = Math.max(0, wordIndex - 1); i <= Math.min(limit - 1, wordIndex + 1); i++) {
         this.paintWord(i);
       }
@@ -251,10 +253,21 @@ export class UIController {
     this.caretEl.style.height = `${h}px`;
     this.caretEl.style.transform = `translate(${x}px, ${y}px)`;
 
-    // keep the active line in the middle of the 3-line viewport
-    const lineH = el.offsetHeight || 1;
-    const line = Math.round(el.offsetTop / lineH);
-    const wanted = Math.max(0, line - 1) * lineH;
+    // Dynamically calculate the actual pixel gap between lines to prevent scrolling drift
+    const firstTop = this.wordEls[0] ? this.wordEls[0].offsetTop : 0;
+    let realLineHeight = el.offsetHeight || 30;
+    
+    for (let i = 1; i < this.wordEls.length; i++) {
+      if (this.wordEls[i].offsetTop > firstTop) {
+        realLineHeight = this.wordEls[i].offsetTop - firstTop;
+        break;
+      }
+    }
+
+    // Keep the active line in the middle of the 3-line viewport
+    const line = Math.round((el.offsetTop - firstTop) / realLineHeight);
+    const wanted = Math.max(0, line - 1) * realLineHeight;
+    
     if (wanted !== this.lineOffset) {
       this.lineOffset = wanted;
       gsap.to(this.wordsEl, { y: -wanted, duration: 0.22, ease: 'power2.out' });
