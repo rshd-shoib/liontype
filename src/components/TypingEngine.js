@@ -94,6 +94,7 @@ export class TypingEngine {
 
   handleKey(e) {
     if (this.finished) return;
+    if (e.repeat) return; // one physical key press = one action, even if held slightly too long
     const key = e.key;
 
     if (key === 'Backspace') {
