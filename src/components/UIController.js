@@ -236,24 +236,43 @@ export class UIController {
     const typed = this.engine.typed[this.engine.wordIndex] || '';
     const letters = el.querySelectorAll('.l');
 
-    let x, y, h;
+    let targetElement, isAfter;
+
+    // 1. Determine exactly which letter the caret should attach to
     if (letters.length === 0) {
-      x = el.offsetLeft; y = el.offsetTop; h = el.offsetHeight;
+      targetElement = el; // Fallback to the whole word container
+      isAfter = false;
     } else if (typed.length === 0) {
-      const f = letters[0];
-      x = el.offsetLeft + f.offsetLeft; y = el.offsetTop + f.offsetTop; h = f.offsetHeight;
+      targetElement = letters[0]; // Before the first letter
+      isAfter = false;
     } else {
       const idx = Math.min(typed.length - 1, letters.length - 1);
-      const c = letters[idx];
-      x = el.offsetLeft + c.offsetLeft + c.offsetWidth;
-      y = el.offsetTop + c.offsetTop;
-      h = c.offsetHeight;
+      targetElement = letters[idx];
+      isAfter = true; // After the most recently typed letter
     }
 
+    // 2. Safely calculate exact coordinates relative to the main container
+    let x = 0;
+    let y = 0;
+    let current = targetElement;
+    
+    // Loop through parents to get true X/Y without double-counting
+    while (current && current !== this.wordsEl) {
+      x += current.offsetLeft;
+      y += current.offsetTop;
+      current = current.offsetParent;
+    }
+
+    // Push caret to the right side of the letter if we are actively typing
+    if (isAfter) x += targetElement.offsetWidth;
+    
+    const h = targetElement.offsetHeight || 30;
+
+    // Apply exact positioning
     this.caretEl.style.height = `${h}px`;
     this.caretEl.style.transform = `translate(${x}px, ${y}px)`;
 
-    // Dynamically calculate the actual pixel gap between lines to prevent scrolling drift
+    // 3. Dynamically calculate pixel gap between lines to prevent scrolling drift
     const firstTop = this.wordEls[0] ? this.wordEls[0].offsetTop : 0;
     let realLineHeight = el.offsetHeight || 30;
     
@@ -264,7 +283,7 @@ export class UIController {
       }
     }
 
-    // Keep the active line in the middle of the 3-line viewport
+    // Keep the active line in the middle of the viewport
     const line = Math.round((el.offsetTop - firstTop) / realLineHeight);
     const wanted = Math.max(0, line - 1) * realLineHeight;
     
