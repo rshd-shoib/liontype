@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neon">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIONTYPE — Futuristic Typing Arena</title>
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/orbitron@5.0.13/700.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/orbitron@5.0.13/900.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.19/400.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.19/700.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/rajdhani@5.0.8/500.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/rajdhani@5.0.8/600.css" rel="stylesheet">
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div class="scanlines"></div>
+
+<div class="wrap">
+  <header>
+    <div class="logo" id="logoBtn">
+      <div class="lion-badge">🦁</div>
+      <div>
+        <h1>LIONTYPE</h1>
+        <div class="sub">Futuristic Typing Arena</div>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="hud-chip">Best <b id="bestWpm">0</b> WPM</div>
+      <div class="hud-chip">Tests <b id="testCount">0</b></div>
+    </div>
+  </header>
+
+  <div class="config" id="configBar">
+    <button class="cfg-btn gold mode-btn active" data-mode="time">⏱ time</button>
+    <button class="cfg-btn gold mode-btn" data-mode="words">✦ words</button>
+    <div class="divider"></div>
+    <span id="timeOpts">
+      <button class="cfg-btn dur-btn" data-dur="15">15</button>
+      <button class="cfg-btn dur-btn active" data-dur="30">30</button>
+      <button class="cfg-btn dur-btn" data-dur="60">60</button>
+      <button class="cfg-btn dur-btn" data-dur="120">120</button>
+    </span>
+    <span id="wordOpts" style="display:none">
+      <button class="cfg-btn wc-btn" data-wc="10">10</button>
+      <button class="cfg-btn wc-btn active" data-wc="25">25</button>
+      <button class="cfg-btn wc-btn" data-wc="50">50</button>
+      <button class="cfg-btn wc-btn" data-wc="100">100</button>
+    </span>
+    <div class="divider"></div>
+    <button class="cfg-btn" id="punctBtn"># punctuation</button>
+    <button class="cfg-btn" id="soundBtn">♪ sound</button>
+    <div class="divider"></div>
+    <button class="cfg-btn theme-btn active" data-theme="neon">◈ neon</button>
+    <button class="cfg-btn theme-btn" data-theme="savanna">☀ savanna</button>
+    <button class="cfg-btn theme-btn" data-theme="cyber">▲ cyber</button>
+  </div>
+
+  <div class="stage-gap"></div>
+
+  <div class="live" id="liveStats">
+    <div class="ring" id="ringWrap">
+      <svg width="74" height="74"><circle class="track" cx="37" cy="37" r="31"/><circle class="prog" id="ringProg" cx="37" cy="37" r="31"/></svg>
+      <div class="val" id="ringVal">30</div>
+    </div>
+    <div class="stat"><div class="num" id="liveWpm">0</div><div class="lbl">WPM</div></div>
+    <div class="stat"><div class="num gold" id="liveAcc">100</div><div class="lbl">ACC %</div></div>
+  </div>
+
+  <div class="arena" id="arena">
+    <div id="words"></div>
+    <div id="caret"></div>
+    <div class="focus-hint">▸ Click here or press any key to focus ◂</div>
+    <input id="hiddenInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+  </div>
+
+  <div class="restart-row">
+    <button class="neo-btn gold" id="restartBtn">↻ Restart</button>
+  </div>
+  <div class="hint">press <kbd>Tab</kbd> or <kbd>Esc</kbd> to restart — the pride awaits your speed</div>
+
+  <div id="results">
+    <div class="res-grid">
+      <div class="res-card hero"><div class="big" id="rWpm">0</div><div class="cap">WPM</div></div>
+      <div class="res-card"><div class="big" id="rAcc">0%</div><div class="cap">Accuracy</div></div>
+      <div class="res-card"><div class="big" id="rRaw">0</div><div class="cap">Raw WPM</div></div>
+      <div class="res-card"><div class="big" id="rChars">0</div><div class="cap">Chars C/W</div></div>
+      <div class="res-card"><div class="big" id="rCons">0%</div><div class="cap">Consistency</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">◢ WPM Timeline</div>
+      <canvas id="chart" height="190"></canvas>
+    </div>
+    <div class="rank-banner" id="rankBanner"></div>
+    <div class="restart-row">
+      <button class="neo-btn" id="nextBtn">⟁ Next Test</button>
+    </div>
+  </div>
+
+  <footer>LIONTYPE <span>◆</span> Hunt Your Speed <span>◆</span> Built for Arshad</footer>
+</div>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
+

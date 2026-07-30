@@ -1,0 +1,56 @@
+/* LionType — keyframes & motion primitives */
+
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.12; }
+}
+
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes sheen {
+  from { transform: translateX(-140%); }
+  to { transform: translateX(140%); }
+}
+
+@keyframes shake-x {
+  0% { transform: translateX(0); }
+  18% { transform: translateX(-7px); }
+  36% { transform: translateX(6px); }
+  54% { transform: translateX(-4px); }
+  72% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+.shake { animation: shake-x 0.24s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+.arena.shake { box-shadow: 0 26px 70px rgba(0, 0, 0, 0.55), 0 0 46px var(--bad-soft); }
+
+@keyframes pb-pulse {
+  0%, 100% { box-shadow: 0 0 16px var(--c3-25); transform: scale(1); }
+  50% { box-shadow: 0 0 44px var(--c3-45); transform: scale(1.012); }
+}
+
+@keyframes glow-breathe {
+  0%, 100% { filter: drop-shadow(0 0 10px var(--c1-25)); }
+  50% { filter: drop-shadow(0 0 26px var(--c1-45)); }
+}
+
+/* boot sweep — a light bar that wipes across the arena on load */
+@keyframes boot-sweep {
+  from { transform: translateX(-100%); opacity: 0.9; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+.arena::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent, var(--c1-25), transparent);
+  transform: translateX(-100%);
+}
+
+body.ready .arena::after { animation: boot-sweep 1.5s 0.25s ease-out forwards; }

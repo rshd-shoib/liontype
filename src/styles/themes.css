@@ -1,0 +1,71 @@
+/* LionType — theme palettes.
+   Keep these hex values in sync with THEMES in src/utils/helpers.js,
+   which feeds the same colours into the WebGL scene. */
+
+:root,
+[data-theme='neon'] {
+  --c1: #00e5ff;   /* primary  — cyan   */
+  --c2: #7c4dff;   /* accent   — violet */
+  --c3: #ffb52e;   /* lion     — gold   */
+
+  --c1-12: rgba(0, 229, 255, 0.12);
+  --c1-25: rgba(0, 229, 255, 0.25);
+  --c1-35: rgba(0, 229, 255, 0.35);
+  --c1-45: rgba(0, 229, 255, 0.45);
+  --c3-12: rgba(255, 181, 46, 0.12);
+  --c3-25: rgba(255, 181, 46, 0.25);
+  --c3-35: rgba(255, 181, 46, 0.35);
+  --c3-45: rgba(255, 181, 46, 0.45);
+
+  --bg: radial-gradient(1200px 700px at 50% -10%, #101a3a 0%, #05060e 62%, #03040a 100%);
+  --bad: #ff4d6d;
+  --bad-soft: rgba(255, 77, 109, 0.55);
+  --bad-dim: rgba(255, 77, 109, 0.4);
+}
+
+[data-theme='savanna'] {
+  --c1: #ffb52e;
+  --c2: #ff7a1a;
+  --c3: #ffe9b0;
+
+  --c1-12: rgba(255, 181, 46, 0.12);
+  --c1-25: rgba(255, 181, 46, 0.25);
+  --c1-35: rgba(255, 181, 46, 0.35);
+  --c1-45: rgba(255, 181, 46, 0.45);
+  --c3-12: rgba(255, 233, 176, 0.12);
+  --c3-25: rgba(255, 233, 176, 0.25);
+  --c3-35: rgba(255, 233, 176, 0.35);
+  --c3-45: rgba(255, 233, 176, 0.45);
+
+  --bg: radial-gradient(1200px 700px at 50% -10%, #3a2409 0%, #150d03 60%, #0a0602 100%);
+  --bad: #ff5f43;
+  --bad-soft: rgba(255, 95, 67, 0.55);
+  --bad-dim: rgba(255, 95, 67, 0.4);
+}
+
+[data-theme='cyber'] {
+  --c1: #ff2ec4;
+  --c2: #7c4dff;
+  --c3: #00e5ff;
+
+  --c1-12: rgba(255, 46, 196, 0.12);
+  --c1-25: rgba(255, 46, 196, 0.25);
+  --c1-35: rgba(255, 46, 196, 0.35);
+  --c1-45: rgba(255, 46, 196, 0.45);
+  --c3-12: rgba(0, 229, 255, 0.12);
+  --c3-25: rgba(0, 229, 255, 0.25);
+  --c3-35: rgba(0, 229, 255, 0.35);
+  --c3-45: rgba(0, 229, 255, 0.45);
+
+  --bg: radial-gradient(1200px 700px at 50% -10%, #2a0a45 0%, #0c0512 62%, #06030b 100%);
+  --bad: #ff3355;
+  --bad-soft: rgba(255, 51, 85, 0.55);
+  --bad-dim: rgba(255, 51, 85, 0.4);
+}
+
+/* smooth cross-fade when switching themes */
+body, .arena, .cfg-btn, .neo-btn, .res-card, .rank-banner {
+  transition-property: background, color, border-color, box-shadow;
+  transition-duration: 0.45s;
+  transition-timing-function: ease;
+}
